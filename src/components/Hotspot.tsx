@@ -10,6 +10,7 @@ interface HotspotProps {
   data: LinkHotspot;
   visible: boolean;
   onNavigate: (_sceneId: string, _sourceHotspotYaw: number) => void;
+  zoomLevel: number;
 }
 
 // This is the actual React component that will be rendered.
@@ -51,6 +52,7 @@ export default function Hotspot({
   data,
   visible,
   onNavigate,
+  zoomLevel,
 }: HotspotProps) {
   const rootRef = useRef<Root | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -108,34 +110,22 @@ export default function Hotspot({
       const minDistance = 1;
       const maxDistance = 20;
 
-      // Scale factor: closer = very large (1.5), farther = much smaller (0.2)
-      const scaleFactor = Math.max(
-        0.2,
-        Math.min(
-          1.5,
-          1.5 - ((distance - minDistance) / (maxDistance - minDistance)) * 1
-        )
-      );
+      // Base scaling - closer objects appear larger
+      const distanceFactor = 1.5 - ((distance - minDistance) / (maxDistance - minDistance)) * 1.3;
+      
+      // Zoom adjustment - smaller when zoomed out, larger when zoomed in
+      const scaleFactor = distanceFactor * (0.3 + zoomLevel * 0.7);
 
-      // Oval factor: closer = more circular (0.9), farther = more oval/flat (0.3) to simulate floor perspective
-      const ovalFactor = Math.max(
-        0.3,
-        Math.min(
-          0.9,
-          0.9 - ((distance - minDistance) / (maxDistance - minDistance)) * 0.6
-        )
-      );
-
-      // Perspective rotation: farther objects appear more tilted to simulate lying flat on floor
-      const perspectiveRotation = Math.min(
-        65,
-        45 + ((distance - minDistance) / (maxDistance - minDistance)) * 20
-      );
+      // Position adjustment based on zoom - move "forward" when zoomed out
+      const zoomOffsetX = (1 - zoomLevel) * -10; // Move left when zooming out
+      const zoomOffsetY = (1 - zoomLevel) * -15;
 
       const hotspotStyle = {
         '--scale-factor': scaleFactor,
-        '--oval-factor': ovalFactor,
-        '--perspective-rotation': `${perspectiveRotation}deg`,
+        '--oval-factor': 0.6, // More oval for flatter appearance
+        '--perspective-rotation': '45deg', // Increased tilt for flat-on-ground effect
+        '--zoom-offset-x': `${zoomOffsetX}px`,
+        '--zoom-offset-y': `${zoomOffsetY}px`,
       } as React.CSSProperties;
 
       rootRef.current.render(
@@ -147,7 +137,7 @@ export default function Hotspot({
         />
       );
     }
-  }, [data, visible, onNavigate]);
+  }, [data, visible, onNavigate, zoomLevel]);
 
   return null;
 }

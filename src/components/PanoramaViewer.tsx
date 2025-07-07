@@ -62,6 +62,7 @@ export default function PanoramaViewer({
     pitch: number;
     fov: number;
   } | null>(null);
+  const [zoomLevel, setZoomLevel] = useState(1);
   const [performanceStats, setPerformanceStats] = useState<{
     loadedScenes: number;
     memoryUsage: string;
@@ -753,7 +754,16 @@ export default function PanoramaViewer({
     if (!viewer || isLoading) return;
 
     const updateArrowRotation = () => {
-      const yaw = viewer.view().yaw();
+      const view = viewer.view();
+      const yaw = view.yaw();
+      const fov = view.fov();
+      
+      // Calculate zoom level (1 = fully zoomed in, 0 = fully zoomed out)
+      const maxFov = (120 * Math.PI) / 180; // Max FOV from limiter
+      const minFov = (30 * Math.PI) / 180;   // Min FOV (zoom in)
+      const zoom = 1 - (fov - minFov) / (maxFov - minFov);
+      setZoomLevel(zoom);
+      
       let rotation = yaw * (180 / Math.PI); // Convert radians to degrees
 
       // Apply north offset correction for compass arrow
@@ -954,6 +964,7 @@ export default function PanoramaViewer({
                   data={hotspotData}
                   visible={hotspotsVisible}
                   onNavigate={navigateToScene}
+                  zoomLevel={zoomLevel}
                 />
               );
             }

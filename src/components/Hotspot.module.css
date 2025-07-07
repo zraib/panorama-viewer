@@ -4,6 +4,8 @@
     --hotspot-bg-color-hover: rgba(255, 255, 255, 0.9);
     --distance-bg-color: rgba(0, 0, 0, 0.8);
     --distance-text-color: white;
+    --zoom-offset-x: 0px;
+    --zoom-offset-y: 0px;
 
     width: calc(var(--hotspot-base-size) * var(--scale-factor, 1));
     height: calc(var(--hotspot-base-size) * var(--scale-factor, 1));
@@ -26,7 +28,12 @@
     height: 100%;
     background: var(--hotspot-bg-color);
     border-radius: 50%;
-    transform: perspective(200px) rotateX(var(--perspective-rotation, 25deg)) scaleY(var(--oval-factor, 0.7));
+    transform: 
+        perspective(200px) 
+        rotateX(var(--perspective-rotation, 25deg)) 
+        scaleY(var(--oval-factor, 0.7))
+        translate(var(--zoom-offset-x), var(--zoom-offset-y));
+    transition: transform 0.3s ease-out;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
