@@ -33,28 +33,43 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 
 ### Platform-Specific Setup
 
-#### Windows
+#### Automated Installation (Recommended)
 
+```bash
+# Install Python dependencies automatically
+npm run install-python-deps
+
+# Or use the postinstall hook (runs automatically after npm install)
+npm install
+```
+
+#### Manual Installation
+
+**Windows**
 ```bash
 # Install Python from python.org or Microsoft Store
 python -m pip install numpy
+# Or install from requirements.txt
+python -m pip install -r requirements.txt
 ```
 
-#### macOS
-
+**macOS**
 ```bash
 # Using Homebrew
 brew install python
 python3 -m pip install numpy
+# Or install from requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
-#### Linux
-
+**Linux**
 ```bash
 # Ubuntu/Debian
 sudo apt update
 sudo apt install python3 python3-pip
 python3 -m pip install numpy
+# Or install from requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 ## 🛠️ Available Scripts
@@ -70,6 +85,7 @@ python3 -m pip install numpy
 
 - `npm run generate-config` - Generate panorama configuration from CSV data
 - `npm run test:config` - Test configuration generation
+- `npm run install-python-deps` - Install Python dependencies (numpy) automatically
 
 ### Testing
 
