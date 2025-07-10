@@ -3,20 +3,25 @@ FROM node:18-bullseye
 
 # Install Python and pip
 RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip \
-    python3-dev \
+    python3.9 \
+    python3.9-pip \
+    python3.9-dev \
+    python3.9-venv \
     && rm -rf /var/lib/apt/lists/*
 
-# Create symbolic link for python command
-RUN ln -s /usr/bin/python3 /usr/bin/python
+# Create symbolic links for python commands
+RUN ln -s /usr/bin/python3.9 /usr/bin/python3 && \
+    ln -s /usr/bin/python3.9 /usr/bin/python && \
+    ln -s /usr/bin/pip3.9 /usr/bin/pip3 && \
+    ln -s /usr/bin/pip3.9 /usr/bin/pip
 
 # Set working directory
 WORKDIR /app
 
 # Copy Python requirements and install Python dependencies
 COPY requirements.txt .
-RUN pip3 install --no-cache-dir -r requirements.txt
+RUN python3 -m pip install --upgrade pip && \
+    python3 -m pip install --no-cache-dir -r requirements.txt
 
 # Copy package files and install Node.js dependencies
 COPY package*.json ./

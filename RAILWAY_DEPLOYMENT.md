@@ -70,9 +70,32 @@ For Docker-based deployment:
 
 ### Error: "Python or required packages (numpy) are not installed"
 
-**Solution**: The deployment files created above should resolve this issue by:
-- Installing Python dependencies before building
-- Ensuring NumPy is available during configuration generation
+**Updated Solutions** (try in order):
+
+#### Option 1: Force Nixpacks Configuration
+1. Ensure `nixpacks.toml` is in your root directory
+2. In Railway dashboard, go to Settings → Environment
+3. Add environment variable: `NIXPACKS_CONFIG_FILE=nixpacks.toml`
+4. Redeploy
+
+#### Option 2: Use Docker Deployment
+1. In Railway dashboard, go to Settings → Build
+2. Change "Build Method" from "Nixpacks" to "Dockerfile"
+3. Redeploy
+
+#### Option 3: Manual Environment Variables
+Add these in Railway dashboard → Settings → Environment:
+```
+PYTHON_VERSION=3.9
+NODE_VERSION=18
+NIXPACKS_PYTHON_VERSION=3.9
+```
+
+#### Option 4: Alternative Build Command
+If using custom build command in Railway:
+```bash
+apt-get update && apt-get install -y python3.9 python3.9-pip && python3.9 -m pip install -r requirements.txt && npm ci && npm run build
+```
 
 ### Manual Configuration Generation
 

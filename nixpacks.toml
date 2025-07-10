@@ -1,0 +1,19 @@
+[variables]
+PYTHON_VERSION = "3.9"
+NODE_VERSION = "18"
+
+[phases.setup]
+nixPkgs = ["python39", "python39Packages.pip", "nodejs-18_x", "npm"]
+
+[phases.install]
+cmds = [
+  "python3 -m pip install --upgrade pip",
+  "python3 -m pip install -r requirements.txt",
+  "npm ci"
+]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[start]
+cmd = "npm start"
