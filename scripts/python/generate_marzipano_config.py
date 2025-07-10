@@ -58,16 +58,30 @@ def compute_initial_yaw(quat):
 
 def generate_config(csv_file, output_file='config.json', project_path=''):
     panoramas = []
+    
+    # Detect delimiter by reading first line
     with open(csv_file, 'r', encoding='utf-8') as f:
-        delimiter = ';' if ';' in f.readline() else ','
-        f.seek(0)
+        first_line = f.readline()
+        delimiter = ';' if ';' in first_line else ','
+    
+    # Read CSV with detected delimiter
+    with open(csv_file, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f, delimiter=delimiter)
-        reader.fieldnames = [name.strip() for name in reader.fieldnames]
+        if reader.fieldnames:
+            reader.fieldnames = [name.strip() for name in reader.fieldnames]
         for row in reader:
             row = {k.strip(): v.strip() for k, v in row.items()}
+            filename = row.get('filename', '')
+            # Extract ID from filename - handle different formats
+            if '-' in filename:
+                pano_id = filename.split('-')[0]
+            else:
+                # Remove file extension and use as ID
+                pano_id = filename.split('.')[0] if '.' in filename else filename
+            
             pano = {
-                'id': row.get('filename').split('-')[0],  # Always extract ID from filename
-                'filename': row.get('filename'),
+                'id': pano_id,
+                'filename': filename,
                 'pos': [float(row['pano_pos_x']), float(row['pano_pos_y']), float(row['pano_pos_z'])],
                 'ori': [float(row['pano_ori_w']), float(row['pano_ori_x']), float(row['pano_ori_y']), float(row['pano_ori_z'])]
             }
