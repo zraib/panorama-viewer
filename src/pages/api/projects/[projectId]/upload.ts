@@ -192,9 +192,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log(`- Images in directory: ${fs.readdirSync(imagesDir).length}`);
     
     // Run the configuration generation script for this specific project
+    // Use Railway-compatible script that forces Node.js-only mode
     try {
       console.log(`Starting configuration generation for project: ${projectId}`);
-      const { stdout, stderr } = await execAsync(`node scripts/node/generate-config.js --project "${projectId}"`, {
+      const { stdout, stderr } = await execAsync(`node scripts/railway-deploy.js --project "${projectId}"`, {
         cwd: process.cwd(),
       });
       
@@ -230,7 +231,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         message: `Files uploaded successfully to project "${projectId}", but configuration generation failed: ${errorDetails}`,
         projectId,
         details: process.env.NODE_ENV === 'development' ? scriptError.message : undefined,
-        manualCommand: `node scripts/node/generate-config.js --project "${projectId}"`
+        manualCommand: `node scripts/railway-deploy.js --project "${projectId}"`
       });
     }
 
