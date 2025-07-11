@@ -81,7 +81,7 @@ export default function ProjectViewer(): ReactElement {
         for (const scene of testScenes) {
           try {
             const imageResponse = await fetch(
-              `/${projectId}/images/${scene.id}-pano.jpg`,
+              `/api/files/${projectId}/images/${scene.id}-pano.jpg`,
               {
                 method: 'HEAD',
                 cache: 'no-store',

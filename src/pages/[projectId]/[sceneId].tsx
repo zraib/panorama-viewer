@@ -88,7 +88,7 @@ export default function SceneViewer(): ReactElement {
         // Check if the scene's image file exists
         try {
           const imageResponse = await fetch(
-            `/${projectId}/images/${sceneId}-pano.jpg`,
+            `/api/files/${projectId}/images/${sceneId}-pano.jpg`,
             {
               method: 'HEAD',
               cache: 'no-store',

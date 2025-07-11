@@ -159,8 +159,8 @@ export function usePerformanceManager({
               const img = new Image();
               img.loading = 'lazy';
               const imagePath = projectId
-                ? `/${projectId}/images/${targetId}-pano.jpg`
-                : `/images/${targetId}-pano.jpg`;
+                ? `/api/files/${projectId}/images/${targetId}-pano.jpg`
+      : `/api/files/images/${targetId}-pano.jpg`;
               img.src = imagePath;
             } catch (imgError) {
               console.warn(`Failed to preload image for scene ${targetId}:`, imgError);

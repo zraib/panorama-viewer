@@ -108,8 +108,8 @@ export function useSceneManager({
       try {
         // Create source with project-specific path
         const imagePath = projectId
-          ? `/${projectId}/images/${sceneInfo.data.id}-pano.jpg`
-          : `/images/${sceneInfo.data.id}-pano.jpg`;
+          ? `/api/files/${projectId}/images/${sceneInfo.data.id}-pano.jpg`
+      : `/api/files/images/${sceneInfo.data.id}-pano.jpg`;
         const source = Marzipano.ImageUrlSource.fromString(imagePath);
 
         // Progressive geometry based on priority and total scene count

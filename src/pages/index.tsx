@@ -105,8 +105,8 @@ export default function Home(): ReactElement {
       for (const scene of testScenes) {
         try {
           const imagePath = projectId
-            ? `${imagePathPrefix}/images/${scene.id}-pano.jpg`
-            : `/images/${scene.id}-pano.jpg`;
+            ? `/api/files${imagePathPrefix}/images/${scene.id}-pano.jpg`
+        : `/api/files/images/${scene.id}-pano.jpg`;
           const imageResponse = await fetch(imagePath, {
             method: 'HEAD',
             cache: 'no-store',

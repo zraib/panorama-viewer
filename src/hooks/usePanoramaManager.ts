@@ -178,8 +178,8 @@ export function usePanoramaManager({ projectId, initialSceneId, closePanels }: U
       if (sceneInfo) {
         const img = new Image();
         const imagePath = projectId
-          ? `/${projectId}/images/${sceneId}-pano.jpg`
-          : `/images/${sceneId}-pano.jpg`;
+          ? `/api/files/${projectId}/images/${sceneId}-pano.jpg`
+          : `/api/files/images/${sceneId}-pano.jpg`;
         img.src = imagePath;
 
         await new Promise<void>(resolve => {
