@@ -84,9 +84,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     });
 
+    // Add at the top, after imports
+    const IMAGES_BASE_PATH = process.env.IMAGES_VOLUME_PATH || path.join(process.cwd(), 'public');
     // Ensure project directories exist
-    const publicDir = path.join(process.cwd(), 'public');
-    const projectDir = path.join(publicDir, projectId);
+    // const publicDir = path.join(process.cwd(), 'public');
+    // const projectDir = path.join(publicDir, projectId);
+    // const imagesDir = path.join(projectDir, 'images');
+    // const dataDir = path.join(projectDir, 'data');
+    const projectDir = path.join(IMAGES_BASE_PATH, projectId);
     const imagesDir = path.join(projectDir, 'images');
     const dataDir = path.join(projectDir, 'data');
 

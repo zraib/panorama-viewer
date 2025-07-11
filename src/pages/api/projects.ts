@@ -24,7 +24,7 @@ const ensureDirectoryExists = (dirPath: string) => {
 };
 
 const getProjectInfo = async (projectId: string): Promise<Project | null> => {
-  const projectPath = path.join(process.cwd(), 'public', projectId);
+  const projectPath = path.join(IMAGES_BASE_PATH, projectId);
   
   if (!fs.existsSync(projectPath)) {
     return null;
@@ -87,7 +87,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     switch (method) {
       case 'GET':
         // List all projects
-        const publicDir = path.join(process.cwd(), 'public');
+        // const publicDir = path.join(process.cwd(), 'public');
+        const publicDir = IMAGES_BASE_PATH;
         ensureDirectoryExists(publicDir);
         
         const items = await readdir(publicDir);
@@ -130,7 +131,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           return res.status(400).json({ error: 'Invalid project name' });
         }
         
-        const newProjectPath = path.join(process.cwd(), 'public', sanitizedName);
+        const newProjectPath = path.join(IMAGES_BASE_PATH, sanitizedName);
         
         if (fs.existsSync(newProjectPath)) {
           return res.status(409).json({ error: 'Project already exists' });
@@ -154,7 +155,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           return res.status(400).json({ error: 'Project ID is required' });
         }
         
-        const projectToDelete = path.join(process.cwd(), 'public', projectId);
+        const projectToDelete = path.join(IMAGES_BASE_PATH, projectId);
         
         if (!fs.existsSync(projectToDelete)) {
           return res.status(404).json({ error: 'Project not found' });
@@ -177,3 +178,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   }
 }
+// Add after imports
+const IMAGES_BASE_PATH = process.env.IMAGES_VOLUME_PATH || path.join(process.cwd(), 'public');

@@ -14,7 +14,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const projectDir = path.join(process.cwd(), 'public', projectId);
+    // Add after imports
+    const IMAGES_BASE_PATH = process.env.IMAGES_VOLUME_PATH || path.join(process.cwd(), 'public');
+    const projectDir = path.join(IMAGES_BASE_PATH, projectId);
     
     if (!fs.existsSync(projectDir)) {
       return res.status(404).json({ error: 'Project not found' });
@@ -32,6 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Check for images directory
+    // const imagesDir = path.join(projectDir, 'images');
     const imagesDir = path.join(projectDir, 'images');
     if (fs.existsSync(imagesDir)) {
       const imageFiles = fs.readdirSync(imagesDir)
