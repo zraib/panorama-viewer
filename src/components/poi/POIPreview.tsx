@@ -69,7 +69,7 @@ const POIPreview: React.FC<POIPreviewProps> = ({ poi, projectId, onClose, onEdit
       return poi.content;
     }
     // Use storage-aware API route for file serving
-    return getFileUrl(`${projectId}/data/poi/attachments/${poi.content}`);
+    return getFileUrl(`projects/${projectId}/data/poi/attachments/${poi.content}`);
   };
 
   const renderFileIcon = (category: string) => {
