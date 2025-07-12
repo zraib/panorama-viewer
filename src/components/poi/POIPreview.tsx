@@ -15,6 +15,7 @@ import {
 } from 'react-icons/fa';
 import ConfirmationModal from '../ui/ConfirmationModal';
 import styles from './POIPreview.module.css';
+import { getFileUrl } from '@/utils/storage-config';
 // Using iframe-based PDF viewer for better compatibility
 
 const POIPreview: React.FC<POIPreviewProps> = ({ poi, projectId, onClose, onEdit, onDelete }) => {
@@ -67,8 +68,8 @@ const POIPreview: React.FC<POIPreviewProps> = ({ poi, projectId, onClose, onEdit
     if (poi.type === 'iframe') {
       return poi.content;
     }
-    // Use API route for file serving to handle CORS and static file issues
-    return `/api/files/${projectId}/data/poi/attachments/${poi.content}`;
+    // Use storage-aware API route for file serving
+    return getFileUrl(`${projectId}/data/poi/attachments/${poi.content}`);
   };
 
   const renderFileIcon = (category: string) => {

@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { ReactElement, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { getProjectsApiUrl, getConfigApiUrl, getImageUrl } from '@/utils/storage-config';
 import styles from '@/styles/Welcome.module.css';
 // ProjectManager moved to PanoramaViewer component
 
@@ -47,7 +48,7 @@ export default function Home(): ReactElement {
 
   const loadProjects = async () => {
     try {
-      const response = await fetch('/api/projects');
+      const response = await fetch(getProjectsApiUrl());
       if (response.ok) {
         const data = await response.json();
         setProjects(data.projects);
@@ -68,7 +69,7 @@ export default function Home(): ReactElement {
       if (projectId) {
         // Check project-specific config
         configResponse = await fetch(
-          `/api/projects/${encodeURIComponent(projectId)}/config`,
+          getConfigApiUrl(projectId),
           {
             cache: 'no-store',
           }
@@ -105,7 +106,7 @@ export default function Home(): ReactElement {
       for (const scene of testScenes) {
         try {
           const imagePath = projectId
-            ? `${imagePathPrefix}/images/${scene.id}-pano.jpg`
+            ? getImageUrl(projectId, `${scene.id}-pano.jpg`)
             : `/images/${scene.id}-pano.jpg`;
           const imageResponse = await fetch(imagePath, {
             method: 'HEAD',

@@ -5,6 +5,7 @@ import { useHotspotManager } from './useHotspotManager';
 import { usePerformanceManager } from './usePerformanceManager';
 import { useViewerEvents } from './useViewerEvents';
 import { checkWebGLSupport, getWebGLDiagnostics } from '@/utils/panoramaUtils';
+import { getConfigApiUrl, getImageUrl } from '@/utils/storage-config';
 import { ConfigData } from '@/types/scenes';
 
 interface UsePanoramaManagerProps {
@@ -81,7 +82,7 @@ export function usePanoramaManager({ projectId, initialSceneId, closePanels }: U
       }
 
       const configUrl = projectId
-        ? `/api/projects/${encodeURIComponent(projectId)}/config`
+        ? getConfigApiUrl(projectId)
         : '/config.json';
       const response = await fetch(configUrl);
       if (!response.ok) {
@@ -178,7 +179,7 @@ export function usePanoramaManager({ projectId, initialSceneId, closePanels }: U
       if (sceneInfo) {
         const img = new Image();
         const imagePath = projectId
-          ? `/${projectId}/images/${sceneId}-pano.jpg`
+          ? getImageUrl(projectId, `${sceneId}-pano.jpg`)
           : `/images/${sceneId}-pano.jpg`;
         img.src = imagePath;
 

@@ -2,6 +2,7 @@ import { useState, FormEvent, ChangeEvent, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import styles from '@/styles/Upload.module.css';
+import { getUploadApiUrl, getProjectsApiUrl } from '../utils/storage-config';
 
 export default function Upload() {
   const router = useRouter();
@@ -72,7 +73,7 @@ export default function Upload() {
         try {
           // Load project info
           const projectResponse = await fetch(
-            `/api/projects?projectId=${encodeURIComponent(projectParam)}`
+            `${getProjectsApiUrl()}?projectId=${encodeURIComponent(projectParam)}`
           );
           if (projectResponse.ok) {
             const projectData = await projectResponse.json();
@@ -86,7 +87,7 @@ export default function Upload() {
 
           // Load existing files
           const filesResponse = await fetch(
-            `/api/projects/${encodeURIComponent(projectParam)}/files`
+            getUploadApiUrl(projectParam).replace('/upload', '/files')
           );
           if (filesResponse.ok) {
             const filesData = await filesResponse.json();
@@ -571,7 +572,7 @@ export default function Upload() {
 
         // Update project name if it has changed
         try {
-          await fetch('/api/projects', {
+          await fetch(getProjectsApiUrl(), {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
@@ -586,7 +587,7 @@ export default function Upload() {
         }
       } else {
         // Create new project
-        const projectResponse = await fetch('/api/projects', {
+        const projectResponse = await fetch(getProjectsApiUrl(), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -622,7 +623,7 @@ export default function Upload() {
 
       // Upload files to the project
       const response = await fetch(
-        `/api/projects/${encodeURIComponent(projectId)}/upload`,
+        getUploadApiUrl(projectId),
         {
           method: 'POST',
           body: formData,

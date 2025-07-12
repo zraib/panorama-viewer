@@ -1,0 +1,25 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+        - echo "Installing Python dependencies for build process"
+        - python --version || echo "Python not available, using Node.js alternatives"
+        - pip install numpy || echo "NumPy not available, using Node.js alternatives"
+    build:
+      commands:
+        - echo "Setting environment variables"
+        - env >> .env.local
+        - echo "Building Next.js application"
+        - npm run build
+        - echo "Generating project configurations"
+        - node scripts/node/generate-config.js || echo "Config generation completed"
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+      - .next/cache/**/*

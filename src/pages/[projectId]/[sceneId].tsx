@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { ReactElement, useState, useEffect } from 'react';
 import Link from 'next/link';
+import { getConfigApiUrl, getImageUrl } from '@/utils/storage-config';
 import styles from '@/styles/Welcome.module.css';
 
 // Dynamically import PanoramaViewer to avoid SSR issues with Marzipano
@@ -49,7 +50,7 @@ export default function SceneViewer(): ReactElement {
 
         // Try to fetch project config
         const configResponse = await fetch(
-          `/api/projects/${encodeURIComponent(projectId)}/config`,
+          getConfigApiUrl(projectId),
           {
             cache: 'no-store',
           }
@@ -88,7 +89,7 @@ export default function SceneViewer(): ReactElement {
         // Check if the scene's image file exists
         try {
           const imageResponse = await fetch(
-            `/${projectId}/images/${sceneId}-pano.jpg`,
+            getImageUrl(projectId, `${sceneId}-pano.jpg`),
             {
               method: 'HEAD',
               cache: 'no-store',
