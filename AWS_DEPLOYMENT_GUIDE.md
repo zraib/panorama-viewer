@@ -33,10 +33,10 @@ Create a `.env.local` file in your project root:
 
 ```env
 # AWS Configuration
-AWS_REGION=us-east-1
-AWS_ACCESS_KEY_ID=your_access_key_here
-AWS_SECRET_ACCESS_KEY=your_secret_key_here
-AWS_S3_BUCKET_NAME=your-panorama-bucket-name
+PANOR_AWS_REGION=us-east-1
+PANOR_AWS_ACCESS_KEY_ID=your_access_key_here
+PANOR_AWS_SECRET_ACCESS_KEY=your_secret_key_here
+PANOR_AWS_S3_BUCKET_NAME=your-panorama-bucket-name
 
 # Panorama Configuration
 PANORAMA_CONFIG_MODE=production
@@ -209,10 +209,10 @@ frontend:
 
 | Variable | Value | Description |
 |----------|-------|-------------|
-| `AWS_REGION` | `us-east-1` | Your AWS region |
-| `AWS_ACCESS_KEY_ID` | `your_access_key` | IAM user access key |
-| `AWS_SECRET_ACCESS_KEY` | `your_secret_key` | IAM user secret key |
-| `AWS_S3_BUCKET_NAME` | `your-bucket-name` | S3 bucket name |
+| `PANOR_AWS_REGION` | `us-east-1` | Your AWS region |
+| `PANOR_AWS_ACCESS_KEY_ID` | `your_access_key` | IAM user access key |
+| `PANOR_AWS_SECRET_ACCESS_KEY` | `your_secret_key` | IAM user secret key |
+| `PANOR_AWS_S3_BUCKET_NAME` | `your-bucket-name` | S3 bucket name |
 | `USE_S3_STORAGE` | `true` | Enable S3 storage |
 | `PANORAMA_CONFIG_MODE` | `production` | Configuration mode |
 | `NEXT_PUBLIC_DEV_MODE` | `false` | Disable dev mode |
@@ -253,10 +253,10 @@ frontend:
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
-| `AWS_REGION` | Yes | - | AWS region for S3 bucket |
-| `AWS_ACCESS_KEY_ID` | Yes | - | AWS access key |
-| `AWS_SECRET_ACCESS_KEY` | Yes | - | AWS secret key |
-| `AWS_S3_BUCKET_NAME` | Yes | - | S3 bucket name |
+| `PANOR_AWS_REGION` | Yes | - | AWS region for S3 bucket |
+| `PANOR_AWS_ACCESS_KEY_ID` | Yes | - | AWS access key |
+| `PANOR_AWS_SECRET_ACCESS_KEY` | Yes | - | AWS secret key |
+| `PANOR_AWS_S3_BUCKET_NAME` | Yes | - | S3 bucket name |
 | `USE_S3_STORAGE` | No | `false` | Enable S3 storage |
 | `PANORAMA_CONFIG_MODE` | No | `development` | Configuration mode |
 | `PANORAMA_YAW_OFFSET` | No | `0` | Default yaw offset |

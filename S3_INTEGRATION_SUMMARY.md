@@ -53,14 +53,14 @@ For S3 integration, set these environment variables:
 USE_S3_STORAGE=true
 
 # AWS Configuration
-AWS_REGION=us-east-1
-AWS_ACCESS_KEY_ID=your_access_key
-AWS_SECRET_ACCESS_KEY=your_secret_key
-AWS_S3_BUCKET_NAME=your_bucket_name
+PANOR_AWS_REGION=us-east-1
+PANOR_AWS_ACCESS_KEY_ID=your_access_key
+PANOR_AWS_SECRET_ACCESS_KEY=your_secret_key
+PANOR_AWS_S3_BUCKET_NAME=your_bucket_name
 
 # Optional: Public versions for client-side access
-NEXT_PUBLIC_AWS_REGION=us-east-1
-NEXT_PUBLIC_AWS_S3_BUCKET_NAME=your_bucket_name
+NEXT_PUBLIC_PANOR_AWS_REGION=us-east-1
+NEXT_PUBLIC_PANOR_AWS_S3_BUCKET_NAME=your_bucket_name
 ```
 
 ## Storage Structure

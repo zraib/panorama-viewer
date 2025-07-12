@@ -67,10 +67,10 @@ export const getStorageConfig = () => {
     type: getStorageType(),
     isS3: isS3StorageEnabled(),
     aws: {
-      region: process.env.AWS_REGION || 'us-east-1',
-      bucketName: process.env.AWS_S3_BUCKET_NAME || '',
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
+      region: process.env.PANOR_AWS_REGION || 'us-east-1',
+      bucketName: process.env.PANOR_AWS_S3_BUCKET_NAME || '',
+      accessKeyId: process.env.PANOR_AWS_ACCESS_KEY_ID || '',
+      secretAccessKey: process.env.PANOR_AWS_SECRET_ACCESS_KEY || '',
     },
     upload: {
       maxFileSize: parseInt(process.env.MAX_FILE_SIZE || '50000000'),
@@ -97,16 +97,16 @@ export const validateStorageConfig = (): { isValid: boolean; errors: string[] } 
 
   if (config.isS3) {
     if (!config.aws.bucketName) {
-      errors.push('AWS_S3_BUCKET_NAME is required when using S3 storage');
+      errors.push('PANOR_AWS_S3_BUCKET_NAME is required when using S3 storage');
     }
     if (!config.aws.accessKeyId) {
-      errors.push('AWS_ACCESS_KEY_ID is required when using S3 storage');
+      errors.push('PANOR_AWS_ACCESS_KEY_ID is required when using S3 storage');
     }
     if (!config.aws.secretAccessKey) {
-      errors.push('AWS_SECRET_ACCESS_KEY is required when using S3 storage');
+      errors.push('PANOR_AWS_SECRET_ACCESS_KEY is required when using S3 storage');
     }
     if (!config.aws.region) {
-      errors.push('AWS_REGION is required when using S3 storage');
+      errors.push('PANOR_AWS_REGION is required when using S3 storage');
     }
   }
 
@@ -131,7 +131,7 @@ export const getStorageDebugInfo = () => {
     environment: {
       nodeEnv: process.env.NODE_ENV,
       useS3Storage: process.env.USE_S3_STORAGE,
-      awsRegion: process.env.AWS_REGION,
+      awsRegion: process.env.PANOR_AWS_REGION,
       bucketName: config.aws.bucketName ? '[SET]' : '[NOT SET]',
       accessKey: config.aws.accessKeyId ? '[SET]' : '[NOT SET]',
       secretKey: config.aws.secretAccessKey ? '[SET]' : '[NOT SET]',

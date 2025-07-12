@@ -2,14 +2,14 @@ import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, List
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 const s3Client = new S3Client({
-  region: process.env.AWS_REGION || process.env.NEXT_PUBLIC_AWS_REGION,
+  region: process.env.PANOR_AWS_REGION || process.env.NEXT_PUBLIC_PANOR_AWS_REGION,
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+    accessKeyId: process.env.PANOR_AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.PANOR_AWS_SECRET_ACCESS_KEY!,
   },
 });
 
-const BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME || process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME;
+const BUCKET_NAME = process.env.PANOR_AWS_S3_BUCKET_NAME || process.env.NEXT_PUBLIC_PANOR_AWS_S3_BUCKET_NAME;
 
 if (!BUCKET_NAME) {
   throw new Error('AWS S3 bucket name is not configured');
@@ -140,7 +140,7 @@ export function generateS3Key(projectId: string, fileName: string): string {
  * Get the public URL for a file (if bucket is configured for public access)
  */
 export function getPublicUrl(key: string): string {
-  return `https://${BUCKET_NAME}.s3.${process.env.AWS_REGION || process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${key}`;
+  return `https://${BUCKET_NAME}.s3.${process.env.PANOR_AWS_REGION || process.env.NEXT_PUBLIC_PANOR_AWS_REGION}.amazonaws.com/${key}`;
 }
 
 export { s3Client, BUCKET_NAME };
