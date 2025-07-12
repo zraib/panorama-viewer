@@ -40,9 +40,35 @@ const cleanupTempFiles = async (tempFiles: (File | File[])[]) => {
 
 // Helper function to download file from S3 to local temp directory
 const downloadFromS3ToTemp = async (s3Key: string, localPath: string): Promise<void> => {
-  // This would require implementing S3 download functionality
-  // For now, we'll create a placeholder that assumes files are accessible
-  console.log(`Would download ${s3Key} to ${localPath}`);
+  try {
+    const { GetObjectCommand } = await import('@aws-sdk/client-s3');
+    const { s3Client, BUCKET_NAME } = await import('../../../../utils/aws-s3');
+    
+    const command = new GetObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: s3Key,
+    });
+    
+    const response = await s3Client.send(command);
+    
+    if (response.Body) {
+      const chunks: Uint8Array[] = [];
+      const stream = response.Body as any;
+      
+      for await (const chunk of stream) {
+        chunks.push(chunk);
+      }
+      
+      const buffer = Buffer.concat(chunks);
+      await fs.promises.writeFile(localPath, buffer);
+      console.log(`Downloaded ${s3Key} to ${localPath}`);
+    } else {
+      throw new Error('No file content received from S3');
+    }
+  } catch (error) {
+    console.error(`Failed to download ${s3Key} from S3:`, error);
+    throw new Error(`Failed to download file from S3: ${error}`);
+  }
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -54,6 +80,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   
   if (!projectId || typeof projectId !== 'string') {
     return res.status(400).json({ error: 'Project ID is required' });
+  }
+
+  // Check AWS S3 configuration
+  const requiredEnvVars = [
+    'PANOR_AWS_ACCESS_KEY_ID',
+    'PANOR_AWS_SECRET_ACCESS_KEY', 
+    'PANOR_AWS_S3_BUCKET_NAME'
+  ];
+  
+  const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+  if (missingVars.length > 0) {
+    return res.status(500).json({
+      error: 'AWS S3 configuration incomplete',
+      message: `Missing required environment variables: ${missingVars.join(', ')}. Please configure your AWS credentials in the .env file.`,
+      missingVariables: missingVars
+    });
   }
 
   let tempFilesToCleanup: (File | File[])[] = [];
@@ -302,14 +344,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } else if (error.message && error.message.includes('timeout')) {
       errorMessage = 'Upload timeout. Please try again.';
       statusCode = 408;
-    } else if (error.message && error.message.includes('AWS')) {
-      errorMessage = 'AWS S3 upload failed. Please check your configuration.';
+    } else if (error.name === 'CredentialsProviderError' || error.message?.includes('credentials')) {
+      errorMessage = 'AWS credentials are invalid or missing. Please check your .env file configuration.';
+      statusCode = 401;
+    } else if (error.name === 'NoSuchBucket' || error.message?.includes('bucket')) {
+      errorMessage = 'AWS S3 bucket not found. Please check your bucket name in the .env file.';
+      statusCode = 404;
+    } else if (error.name === 'AccessDenied' || error.message?.includes('Access Denied')) {
+      errorMessage = 'Access denied to AWS S3. Please check your IAM permissions.';
+      statusCode = 403;
+    } else if (error.message && (error.message.includes('AWS') || error.message.includes('S3'))) {
+      errorMessage = 'AWS S3 upload failed. Please check your configuration and try again.';
       statusCode = 502;
     }
     
     res.status(statusCode).json({ 
       error: errorMessage,
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined,
+      awsError: process.env.NODE_ENV === 'development' ? {
+        name: error.name,
+        code: error.code,
+        statusCode: error.$metadata?.httpStatusCode
+      } : undefined
     });
 
     // Clean up temp files even on error
