@@ -228,7 +228,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // Generate summary based on storage type
-  const summary = {
+  const summary: Record<string, string> = {
     storage: isS3Enabled ? '✅ S3 Storage' : '✅ Local Storage',
     python: diagnostics.python.required 
       ? (diagnostics.python.available ? '✅ Available' : '❌ Not available')
@@ -247,7 +247,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   };
 
   if (isS3Enabled) {
-    summary['s3Config'] = storageConfig.isValid ? '✅ Valid' : '❌ Invalid';
+    summary.s3Config = storageConfig.isValid ? '✅ Valid' : '❌ Invalid';
   }
 
   res.status(200).json({
