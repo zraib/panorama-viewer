@@ -8,7 +8,6 @@ const nextConfig = {
     PANOR_AWS_SECRET_ACCESS_KEY: process.env.PANOR_AWS_SECRET_ACCESS_KEY,
     PANOR_AWS_S3_BUCKET_NAME: process.env.PANOR_AWS_S3_BUCKET_NAME,
     PANOR_AWS_REGION: process.env.PANOR_AWS_REGION,
-    NODE_ENV: process.env.NODE_ENV,
   },
   // API configuration should be handled in individual API route files
   // Body parser and response limits are configured per route

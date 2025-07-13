@@ -61,7 +61,7 @@ Add the following variables:
 | `PANOR_AWS_SECRET_ACCESS_KEY` | `your_actual_secret_key` | AWS Secret Access Key |
 | `PANOR_AWS_S3_BUCKET_NAME` | `your_bucket_name` | S3 Bucket Name |
 | `PANOR_AWS_REGION` | `us-east-1` | AWS Region |
-| `NODE_ENV` | `production` | Node Environment |
+
 
 ### Important Notes:
 
