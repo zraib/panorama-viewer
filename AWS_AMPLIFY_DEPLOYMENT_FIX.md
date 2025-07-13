@@ -60,7 +60,7 @@ Add the following variables:
 | `PANOR_AWS_ACCESS_KEY_ID` | `your_actual_access_key` | AWS Access Key ID |
 | `PANOR_AWS_SECRET_ACCESS_KEY` | `your_actual_secret_key` | AWS Secret Access Key |
 | `PANOR_AWS_S3_BUCKET_NAME` | `your_bucket_name` | S3 Bucket Name |
-| `PANOR_AWS_REGION` | `us-east-1` | AWS Region |
+| `PANOR_AWS_REGION` | `eu-north-1` | AWS Region |
 
 
 ### Important Notes:
