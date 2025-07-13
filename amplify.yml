@@ -4,36 +4,16 @@ frontend:
     preBuild:
       commands:
         - npm ci
-        - echo "Installing Python dependencies for build process"
-        - |
-          if command -v python3 &> /dev/null; then
-            python3 -m pip install --user numpy
-            echo "Python3 and NumPy installed successfully"
-          elif command -v python &> /dev/null; then
-            python -m pip install --user numpy
-            echo "Python and NumPy installed successfully"
-          else
-            echo "Python not found, using Node.js alternatives for configuration generation"
-          fi
+        - echo "AWS Amplify deployment - using Node.js for configuration generation"
     build:
       commands:
-        - echo "Setting environment variables"
-        - env | grep -E "(PANORAMA_|PANOR_AWS_|NEXT_PUBLIC_|MAX_|UPLOAD_|USE_)" > .env.production
+        - echo "Setting environment variables for Next.js SSR"
+        - env | grep -E "(PANOR_AWS_|USE_S3_STORAGE|NODE_ENV)" >> .env.production
+        - env | grep -E "NEXT_PUBLIC_" >> .env.production
         - echo "Building Next.js application"
         - npm run build
-        - echo "Generating project configurations"
-        - |
-          if [ -d "public" ] && [ "$(ls -A public)" ]; then
-            for project_dir in public/*/; do
-              if [ -d "$project_dir" ] && [ -f "${project_dir}data/pano-poses.csv" ]; then
-                project_name=$(basename "$project_dir")
-                echo "Found existing project: $project_name"
-                node scripts/node/generate-config.js --project "$project_name" || echo "Config generation failed for $project_name"
-              fi
-            done
-          else
-            echo "No existing projects found, skipping config generation"
-          fi
+        - echo "Configuration generation will be handled at runtime via API for S3 storage"
+        - echo "Build completed successfully for AWS Amplify deployment"
   artifacts:
     baseDirectory: .next
     files:
