@@ -121,13 +121,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           projects.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
           
           res.status(200).json({ projects });
-        } catch (error) {
-          console.error('Error listing projects from S3:', error);
+        } catch (error: any) {
+          console.error('Error listing projects from S3:', {
+            name: error.name,
+            message: error.message,
+            code: error.code,
+            statusCode: error.$metadata?.httpStatusCode,
+            requestId: error.$metadata?.requestId,
+            stack: error.stack
+          });
           res.status(500).json({ 
             error: 'Failed to list projects from S3',
-            details: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined
-          });
-        }
+            awsError: {
+              name: error.name,
+              message: error.message,
+              code: error.code,
+              statusCode: error.$metadata?.httpStatusCode
+            },
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+           });
         break;
         
       case 'POST':
@@ -164,11 +176,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           };
           
           res.status(201).json({ project: newProject });
-        } catch (error) {
-          console.error('Error checking project existence in S3:', error);
+        } catch (error: any) {
+          console.error('Error checking project existence in S3:', {
+            name: error.name,
+            message: error.message,
+            code: error.code,
+            statusCode: error.$metadata?.httpStatusCode,
+            requestId: error.$metadata?.requestId,
+            stack: error.stack
+          });
           res.status(500).json({ 
             error: 'Failed to create project',
-            details: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined
+            awsError: {
+              name: error.name,
+              message: error.message,
+              code: error.code,
+              statusCode: error.$metadata?.httpStatusCode
+            },
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
           });
         }
         break;
@@ -192,12 +217,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           await deleteProjectFromS3(projectId);
           
           res.status(200).json({ message: 'Project deleted successfully' });
-        } catch (error) {
-          console.error('Error deleting project from S3:', error);
+        } catch (error: any) {
+          console.error('Error deleting project from S3:', {
+            name: error.name,
+            message: error.message,
+            code: error.code,
+            statusCode: error.$metadata?.httpStatusCode,
+            requestId: error.$metadata?.requestId,
+            stack: error.stack
+          });
           res.status(500).json({ 
             error: 'Failed to delete project',
-            details: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined
-          });
+            awsError: {
+              name: error.name,
+              message: error.message,
+              code: error.code,
+              statusCode: error.$metadata?.httpStatusCode
+            },
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+          });}
         }
         break;
         
