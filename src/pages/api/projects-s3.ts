@@ -139,7 +139,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               statusCode: error.$metadata?.httpStatusCode
             },
             details: process.env.NODE_ENV === 'development' ? error.message : undefined
-           });
+          });
+        }
         break;
         
       case 'POST':
@@ -243,7 +244,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
         res.status(405).json({ error: `Method ${method} not allowed` });
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('Projects S3 API error:', error);
     res.status(500).json({ 
       error: 'Internal server error',
